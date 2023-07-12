@@ -6,7 +6,7 @@ const asyncHandler = require("express-async-handler");
 
 exports.index = asyncHandler(async (req, res, next) => {
   // Get counts of the items in our app
-  // aCateogry IS TEMPORARY ONLY FOR TESTING PURPOSED
+  // CATEGORIES SHOULD BE MOVES TO THE LAYOUT NAVBAR!!!!
   const [numCategories, numItems, categories] = await Promise.all([
     Category.countDocuments({}).exec(),
     Item.countDocuments({}).exec(),
