@@ -8,10 +8,11 @@ block content
         h4 Items in #{title}
 
         each item in categoryItems 
-            .category-item 
-                h5= item.name 
-                p= item.price 
-                p= item.stock
+            a(href=item.url)
+                .category-item                
+                    h5= item.name 
+                    p= item.price 
+                    p= item.stock
 
 
 
