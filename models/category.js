@@ -9,7 +9,7 @@ const CategorySchema = new Schema({
 
 CategorySchema.virtual("url").get(function () {
   let nospaceName = this.name.trim().replace(/\s+/g, "-").toLowerCase();
-  return `/catagory/${nospaceName}/${this._id}`;
+  return `/category/${nospaceName}/${this._id}`;
 });
 
 module.exports = mongoose.model("Category", CategorySchema);

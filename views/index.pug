@@ -7,3 +7,8 @@ block content
   ul
     li #[strong Categories:] !{category_count}
     li #[strong Items:] !{item_count}
+ 
+  ul 
+    each category in categories 
+      li 
+        a(href=category.url) Goto #{category.name}

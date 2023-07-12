@@ -4,5 +4,16 @@ body {
 }
 
 a {
-  color: #00B7FF;
+  color: #00b7ff;
+}
+
+.items-container {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.items-container .category-item {
+  border: 1px solid black;
+  border-radius: 16px;
 }

@@ -1,0 +1,18 @@
+extends layout 
+
+block content 
+    h1= title 
+    p= description 
+
+    .items-container 
+        h4 Items in #{title}
+
+        each item in categoryItems 
+            .category-item 
+                h5= item.name 
+                p= item.price 
+                p= item.stock
+
+
+
+
