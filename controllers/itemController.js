@@ -75,13 +75,20 @@ exports.item_create_post = [
   }),
 ];
 
-exports.item_delete_get = (req, res, next) => {
-  res.send("WIP ITEM DELETE GET");
-};
+exports.item_delete_get = asyncHandler(async (req, res, next) => {
+  const item = await Item.findById(req.params.id).populate("category").exec();
 
-exports.item_delete_post = (req, res, next) => {
-  res.send("WIP ITEM DELETE GET");
-};
+  res.render("item_detail", {
+    title: "Item details",
+    item: item,
+    deleteItem: true,
+  });
+});
+
+exports.item_delete_post = asyncHandler(async (req, res, next) => {
+  await Item.findByIdAndDelete(req.body.itemid);
+  res.redirect("/p/all");
+});
 
 exports.item_update_get = (req, res, next) => {
   res.send("WIP ITEM UPDATE GET");
