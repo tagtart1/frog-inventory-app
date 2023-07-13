@@ -3,6 +3,7 @@ const Item = require("../models/item");
 
 const { body, validationResult } = require("express-validator");
 const asyncHandler = require("express-async-handler");
+const he = require("he");
 
 // GET item create form
 exports.item_create_get = asyncHandler(async (req, res, next) => {
@@ -90,13 +91,80 @@ exports.item_delete_post = asyncHandler(async (req, res, next) => {
   res.redirect("/p/all");
 });
 
-exports.item_update_get = (req, res, next) => {
-  res.send("WIP ITEM UPDATE GET");
-};
+exports.item_update_get = asyncHandler(async (req, res, next) => {
+  const [item, allCategories] = await Promise.all([
+    Item.findById(req.params.id).exec(),
+    Category.find({}, "name").exec(),
+  ]);
+  item.description = he.decode(item.description);
+  res.render("item_create", {
+    title: "Update Item",
+    category_list: allCategories,
+    item: item,
+    selected_category: item.category._id,
+  });
+});
 
-exports.item_update_post = (req, res, next) => {
-  res.send("WIP ITEM UPDATE POST");
-};
+exports.item_update_post = [
+  // Validate and sanitize fields
+  body("category", "Please select a category")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("name", "Please specify a name").trim().isLength({ min: 1 }).escape(),
+  body("price")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Please specify a price")
+    .isFloat({ min: 0 })
+    .withMessage("Enter a valid price"),
+  body("stock")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Please enter a quantity stock")
+    .isInt({ min: 0 })
+    .withMessage("Please enter a valid quantity"),
+  body("description", "Enter a description")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+
+  // Process request
+  asyncHandler(async (req, res, next) => {
+    // Extract errors
+    const errors = validationResult(req);
+
+    // Create item object
+    const item = new Item({
+      name: req.body.name,
+      description: req.body.description,
+      price: req.body.price,
+      category: req.body.category,
+      stock: req.body.stock,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      // Re-render the form with the errors
+
+      const allCategories = await Category.find({}, "name").exec();
+
+      res.render("item_create", {
+        title: "Create Item",
+        item: item,
+        category_list: allCategories,
+        selected_category: item.category._id,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      const updatedItem = await Item.findByIdAndUpdate(req.params.id, item, {});
+      res.redirect(updatedItem.url);
+    }
+  }),
+];
 
 exports.item_detail = asyncHandler(async (req, res, next) => {
   const item = await Item.findById(req.params.id).populate("category").exec();
@@ -106,7 +174,7 @@ exports.item_detail = asyncHandler(async (req, res, next) => {
     err.status = 404;
     return next(err);
   }
-
+  item.description = he.decode(item.description);
   res.render("item_detail", {
     title: "Item details",
     item: item,
