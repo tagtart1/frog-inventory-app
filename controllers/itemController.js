@@ -32,6 +32,11 @@ exports.item_detail = (req, res, next) => {
   res.send("WIP ITEM DETAIL GET");
 };
 
-exports.item_list = (req, res, next) => {
-  res.send("WIP ITEM ALL GET");
-};
+exports.item_list = asyncHandler(async (req, res, next) => {
+  const allItems = await Item.find().exec();
+
+  res.render("item_all", {
+    title: "All Products",
+    allItems: allItems,
+  });
+});
