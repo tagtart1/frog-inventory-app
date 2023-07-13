@@ -4,9 +4,9 @@ const Item = require("../models/item");
 const { body, validationResult } = require("express-validator");
 const asyncHandler = require("express-async-handler");
 
-// GET item creat form
+// GET item create form
 exports.item_create_get = asyncHandler(async (req, res, next) => {
-  const allCategories = await Category.find({}).exec();
+  const allCategories = await Category.find({}, "name").exec();
 
   res.render("item_create", {
     title: "Create Item",
@@ -14,9 +14,66 @@ exports.item_create_get = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.item_create_post = (req, res, next) => {
-  res.send("WIP ITEM CREATE POST");
-};
+// POST item create
+exports.item_create_post = [
+  // Validate and sanitize fields
+  body("category", "Please select a category")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("name", "Please specify a name").trim().isLength({ min: 1 }).escape(),
+  body("price")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Please specify a price")
+    .isFloat({ min: 0 })
+    .withMessage("Enter a valid price"),
+  body("stock")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Please enter a quantity stock")
+    .isInt({ min: 0 })
+    .withMessage("Please enter a valid quantity"),
+  body("description", "Enter a description")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+
+  // Process request
+  asyncHandler(async (req, res, next) => {
+    // Extract errors
+    const errors = validationResult(req);
+
+    // Create item object
+    const item = new Item({
+      name: req.body.name,
+      description: req.body.description,
+      price: req.body.price,
+      category: req.body.category,
+      stock: req.body.stock,
+    });
+
+    if (!errors.isEmpty()) {
+      // Re-render the form with the errors
+
+      const allCategories = await Category.find({}, "name").exec();
+
+      res.render("item_create", {
+        title: "Create Item",
+        item: item,
+        category_list: allCategories,
+        selected_category: item.category._id,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      await item.save();
+      res.redirect(item.url);
+    }
+  }),
+];
 
 exports.item_delete_get = (req, res, next) => {
   res.send("WIP ITEM DELETE GET");
