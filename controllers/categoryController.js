@@ -40,13 +40,49 @@ exports.category_list = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.category_create_get = asyncHandler(async (req, res, next) => {
-  res.send("IN PROGRESS CATEGORY CREATE GET");
-});
-
-exports.category_create_post = (req, res, next) => {
-  res.send("IN PROGRESS CATEGORY CREEAT PORT");
+exports.category_create_get = (req, res, next) => {
+  res.render("category_create", { title: "Create Category" });
 };
+
+// Handle Genre create on POST
+exports.category_create_post = [
+  // Validate and sanitize the name fields.
+  body("name", "Category must have atleast 3 character")
+    .trim()
+    .isLength({ min: 3 })
+    .escape(),
+
+  asyncHandler(async (req, res, next) => {
+    // Extract the validation errors from a request
+    const errors = validationResult(req);
+
+    // Create a category object with the data
+    const category = new Category({
+      name: req.body.name,
+      description: req.body.description,
+    });
+
+    if (!errors.isEmpty()) {
+      res.render("category_create", {
+        title: "Create Category",
+        category: category,
+        errors: errors.array(),
+      });
+    } else {
+      // Data is valid
+      const categoryExists = await Category.findOne({
+        name: req.body.name,
+      }).exec();
+      if (categoryExists) {
+        // Category already exists, redirect
+        res.redirect(categoryExists.url);
+      } else {
+        await category.save();
+        res.redirect(category.url);
+      }
+    }
+  }),
+];
 
 exports.category_delete_get = (req, res, next) => {
   res.send("IN PROGRESS CATEGORY DELETE GET");
