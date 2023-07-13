@@ -34,8 +34,7 @@ exports.category_list = asyncHandler(async (req, res, next) => {
   }
 
   res.render("category_items", {
-    title: category.name,
-    description: category.description,
+    category: category,
     categoryItems: itemsInCategory,
   });
 });
@@ -84,13 +83,27 @@ exports.category_create_post = [
   }),
 ];
 
-exports.category_delete_get = (req, res, next) => {
-  res.send("IN PROGRESS CATEGORY DELETE GET");
-};
+exports.category_delete_get = asyncHandler(async (req, res, next) => {
+  const [category, itemsInCategory] = await Promise.all([
+    Category.findById(req.params.id).exec(),
+    Item.find({ category: req.params.id }).exec(),
+  ]);
 
-exports.category_delete_post = (req, res, next) => {
-  res.send("IN PROGRESS CATEGORY DELETE POST");
-};
+  res.render("category_items", {
+    categoryItems: itemsInCategory,
+    deleteCategory: true,
+    category: category,
+  });
+});
+
+exports.category_delete_post = asyncHandler(async (req, res, next) => {
+  await Promise.all([
+    Item.deleteMany({ category: req.body.categoryid }),
+    Category.findByIdAndDelete(req.body.categoryid),
+  ]);
+
+  res.redirect("/");
+});
 
 exports.category_update_get = (req, res, next) => {
   res.send("IN PROGRESS CATEGORY UPDATE GET");
