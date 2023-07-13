@@ -1,0 +1,34 @@
+extends layout 
+
+block content 
+    h1= title 
+
+    form(method='POST' action='')
+        .form-group 
+            label(for='category') Category: 
+            select#category.form-control(type='select' placeholder='Select category' name='category' required='true')
+                for category in category_list
+                    option(value=category._id, selected=(selected_category==category._id.toString() ? 'selected' : false)) #{category.name}
+        .form-group 
+            label(for='name') Name: 
+            input#name.form-control(type='text' placeholder="Product name" name="name" required="true"
+            value=(undefined===item ? '' : item.name))
+        .form-group 
+            label(for='price') Price: 
+            input#price.form-control(type='text' placeholder='Proudct price' name='price' required='true' value=(undefined===item ? '' : item.price))
+        .form-group 
+            label(for='stock') Stock: 
+            input#stock.form-control(type='text' placeholder='Proudct quantity' name='stock' required='true' value=(undefined===item ? '' : item.stock))
+        .form-group 
+            label(for='description') Description: 
+            input#description.form-control(type='text' placeholder='Proudct description' name='description' required='true' value=(undefined===item ? '' : item.description))
+        
+        button.btn-submit(type="submit") Create Item 
+
+        if errors 
+            ul 
+                for error in errors 
+                    li!= error.msg
+
+        
+        

@@ -4,9 +4,15 @@ const Item = require("../models/item");
 const { body, validationResult } = require("express-validator");
 const asyncHandler = require("express-async-handler");
 
-exports.item_create_get = (req, res, next) => {
-  res.send("WIP ITEM CREATE GET");
-};
+// GET item creat form
+exports.item_create_get = asyncHandler(async (req, res, next) => {
+  const allCategories = await Category.find({}).exec();
+
+  res.render("item_create", {
+    title: "Create Item",
+    category_list: allCategories,
+  });
+});
 
 exports.item_create_post = (req, res, next) => {
   res.send("WIP ITEM CREATE POST");
