@@ -1,0 +1,17 @@
+extends layout 
+
+block content 
+    h1= title 
+
+    .detail-group 
+        h2= item.name 
+        p Category: #{item.category.name}
+        p= item.description 
+        p= item.formattedPrice 
+        p= item.stock
+
+    hr
+    div
+        a(href=`${item.url}/delete`) Delete Item 
+    div
+        a(href=`${item.url}/update`) Update Item
