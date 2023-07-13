@@ -2,3 +2,12 @@ extends layout
 
 block content 
     h1= title
+
+    .items 
+        each item in allItems 
+            a(href=item.url)
+                .item 
+                    h3= item.name 
+                    div 
+                        p QTY: #{item.stock} 
+                        p= item.formattedPrice
