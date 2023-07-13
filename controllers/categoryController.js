@@ -105,10 +105,67 @@ exports.category_delete_post = asyncHandler(async (req, res, next) => {
   res.redirect("/");
 });
 
-exports.category_update_get = (req, res, next) => {
-  res.send("IN PROGRESS CATEGORY UPDATE GET");
-};
+exports.category_update_get = asyncHandler(async (req, res, next) => {
+  const category = await Category.findById(req.params.id);
 
-exports.category_update_post = (req, res, next) => {
-  res.send("IN PROGRESS CATEGORY UPDATE POST");
-};
+  if (category === null) {
+    const err = new Error("Category not found!");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("category_create", {
+    title: "Update Category",
+    category: category,
+  });
+});
+
+exports.category_update_post = [
+  // Validate and sanitize the name fields.
+  body("name", "Category must have atleast 3 character")
+    .trim()
+    .isLength({ min: 3 })
+    .escape(),
+
+  body("description", "Category must have a description")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+
+  asyncHandler(async (req, res, next) => {
+    // Extract the validation errors from a request
+    const errors = validationResult(req);
+
+    // Create a category object with the data
+    const category = new Category({
+      name: req.body.name,
+      description: req.body.description,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      res.render("category_create", {
+        title: "Create Category",
+        category: category,
+        errors: errors.array(),
+      });
+    } else {
+      // Data is valid
+      const categoryExists = await Category.findOne({
+        name: req.body.name,
+        description: req.body.description,
+      }).exec();
+      if (categoryExists) {
+        // Category already exists, redirect
+        res.redirect(categoryExists.url);
+      } else {
+        const updatedCategory = await Category.findByIdAndUpdate(
+          req.params.id,
+          category,
+          {}
+        );
+        res.redirect(updatedCategory.url);
+      }
+    }
+  }),
+];
