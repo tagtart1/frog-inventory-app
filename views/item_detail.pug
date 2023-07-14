@@ -10,6 +10,9 @@ block content
         p= item.formattedPrice 
         p= item.stock
 
+    if item.imgpath 
+        img(src=item.imgpath, alt="product")
+
     hr
     div
         a(href=`${item.url}/delete`) Delete Item 
@@ -24,6 +27,7 @@ block content
                 form(method='POST' action='')
                     .form-group 
                         input#itemid.form-control(type="hidden", name='itemid' required='true' value=item._id)
+                        input#itemid.form-control(type="hidden", name='imgpath' required='true' value=item.imgpath)
                     button.btn-submit(type='submit') Delete Item
                 a(href=item.url)  
                     button Cancel

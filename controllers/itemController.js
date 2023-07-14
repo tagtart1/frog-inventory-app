@@ -1,6 +1,21 @@
 const Category = require("../models/category");
 const Item = require("../models/item");
 
+const path = require("path");
+const fs = require("fs").promises;
+
+const multer = require("multer");
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./public/images");
+  },
+  filename: (req, file, cb) => {
+    console.log(file);
+    cb(null, file.originalname + Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage: storage }).single("image");
 const { body, validationResult } = require("express-validator");
 const asyncHandler = require("express-async-handler");
 const he = require("he");
@@ -17,6 +32,7 @@ exports.item_create_get = asyncHandler(async (req, res, next) => {
 
 // POST item create
 exports.item_create_post = [
+  upload,
   // Validate and sanitize fields
   body("category", "Please select a category")
     .trim()
@@ -54,20 +70,24 @@ exports.item_create_post = [
       price: req.body.price,
       category: req.body.category,
       stock: req.body.stock,
+      imgpath: path.join("/images", req.file.filename),
     });
 
     if (!errors.isEmpty()) {
       // Re-render the form with the errors
 
       const allCategories = await Category.find({}, "name").exec();
+      await fs.unlink(
+        path.join(path.dirname(__dirname), "public", req.body.imgpath)
+      ),
+        res.render("item_create", {
+          title: "Create Item",
+          item: item,
+          category_list: allCategories,
+          selected_category: item.category._id,
+          errors: errors.array(),
+        });
 
-      res.render("item_create", {
-        title: "Create Item",
-        item: item,
-        category_list: allCategories,
-        selected_category: item.category._id,
-        errors: errors.array(),
-      });
       return;
     } else {
       await item.save();
@@ -87,7 +107,11 @@ exports.item_delete_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.item_delete_post = asyncHandler(async (req, res, next) => {
-  await Item.findByIdAndDelete(req.body.itemid);
+  await Promise.all([
+    Item.findByIdAndDelete(req.body.itemid),
+    fs.unlink(path.join(path.dirname(__dirname), "public", req.body.imgpath)),
+  ]);
+
   res.redirect("/p/all");
 });
 
@@ -106,6 +130,7 @@ exports.item_update_get = asyncHandler(async (req, res, next) => {
 });
 
 exports.item_update_post = [
+  upload,
   // Validate and sanitize fields
   body("category", "Please select a category")
     .trim()
@@ -144,20 +169,23 @@ exports.item_update_post = [
       category: req.body.category,
       stock: req.body.stock,
       _id: req.params.id,
+      imgpath: path.join("/images", req.file.filename),
     });
 
     if (!errors.isEmpty()) {
       // Re-render the form with the errors
 
       const allCategories = await Category.find({}, "name").exec();
-
-      res.render("item_create", {
-        title: "Create Item",
-        item: item,
-        category_list: allCategories,
-        selected_category: item.category._id,
-        errors: errors.array(),
-      });
+      await fs.unlink(
+        path.join(path.dirname(__dirname), "public", req.body.imgpath)
+      ),
+        res.render("item_create", {
+          title: "Create Item",
+          item: item,
+          category_list: allCategories,
+          selected_category: item.category._id,
+          errors: errors.array(),
+        });
       return;
     } else {
       const updatedItem = await Item.findByIdAndUpdate(req.params.id, item, {});

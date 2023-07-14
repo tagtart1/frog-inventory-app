@@ -3,7 +3,7 @@ extends layout
 block content 
     h1= title 
 
-    form(method='POST' action='')
+    form(method='POST' action='' enctype="multipart/form-data")
         .form-group 
             label(for='category') Category: 
             select#category.form-control(type='select' placeholder='Select category' name='category' required='true')
@@ -22,6 +22,9 @@ block content
         .form-group 
             label(for='description') Description: 
             input#description.form-control(type='text' placeholder='Proudct description' name='description' required='true' value=(undefined===item ? '' : item.description))
+        .form-group 
+            label(for='image') Product Image: 
+            input#image.form-control(type='file' name='image' value=(undefined===item ? '' : item.imgpath))
         
         button.btn-submit(type="submit") Save Item 
 
