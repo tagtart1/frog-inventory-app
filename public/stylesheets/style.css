@@ -2,6 +2,16 @@ body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: relative;
+
+  background-image: url(/images/background.jpg);
+  background-size: cover;
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  font-family: Roboto;
 }
 
 a {
@@ -67,4 +77,61 @@ a {
   border: 1px solid black;
   width: 300px;
   height: 200px;
+}
+
+.main-nav-list {
+  display: flex;
+  list-style: none;
+  text-decoration: none;
+  color: black;
+  gap: 52px;
+  margin: 0;
+  padding: 0;
+  font-size: 24px;
+}
+
+.main-nav-list a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.index-container h1,
+h2 {
+  margin: 0;
+}
+
+.index-container {
+  background-color: rgba(153, 153, 153, 0.474);
+  padding: 16px;
+  border-radius: 24px;
+  backdrop-filter: blur(4px);
+  box-shadow: 10px 5px 15px rgba(0, 0, 0, 0.27);
+  margin-top: 52px;
+  border: 1px solid rgba(168, 168, 168, 0.848);
+
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.glass-container ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-top: 12px;
+}
+
+.glass-container ul a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.glass-container {
+  background-color: rgba(217, 217, 217, 0.474);
+  padding: 16px;
+  border-radius: 24px;
+
+  box-shadow: 10px 5px 15px rgba(0, 0, 0, 0.27);
+
+  border: 1px solid rgba(168, 168, 168, 0.848);
 }

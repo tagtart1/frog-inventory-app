@@ -1,14 +1,19 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
-
-  ul
-    li #[strong Categories:] !{category_count}
-    li #[strong Items:] !{item_count}
  
-  ul 
-    each category in categories 
-      li 
-        a(href=category.url) Goto #{category.name}
+  .index-container
+    h1= title
+
+    
+    .glass-container
+      h2 Quick stats
+      ul
+        li #[strong Categories:] !{category_count}
+        li #[strong Items:] !{item_count}
+    .glass-container
+      h2 Available Categories
+      ul 
+        each category in categories 
+          li 
+            a(href=category.url) Goto #{category.name}
