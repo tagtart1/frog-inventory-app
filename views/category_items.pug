@@ -1,24 +1,23 @@
 extends layout 
 
 block content 
-    h1= category.name
-    p= category.description
+    h1.category-name= category.name
+    p.category-desc= category.description
 
-    .items-container 
-        h4 Items in #{title}
-
+    
+    .items
         each item in categoryItems 
             a(href=item.url)
-                .category-item                
-                    h5= item.name 
+                .item             
+                    h3= item.name 
+                    p QTY: #{item.stock} 
                     p= item.formattedPrice
-                    p= item.stock
     
-    hr
-    div
-        a(href=`${category.url}/delete`) Delete Category
-    div
-        a(href=`${category.url}/update`) Update Category
+    .actions
+        div
+            a(href=`${category.url}/delete`) Delete Category
+        div
+            a(href=`${category.url}/update`) Update Category
 
     if deleteCategory 
         .delete-container-popup

@@ -18,6 +18,18 @@ a {
   color: #00b7ff;
 }
 
+h1.category-name {
+  font-size: 36px;
+  margin: 0;
+  margin-top: 12px;
+  color: white;
+}
+
+p.category-desc {
+  font-size: 24px;
+  color: white;
+}
+
 .items-container {
   display: flex;
   justify-content: center;
@@ -37,8 +49,8 @@ a {
 .items {
   display: grid;
   gap: 24px;
-
   grid-template-columns: 1fr 1fr 1fr;
+
   background-color: rgba(255, 236, 255, 0.474);
   padding: 16px;
   border-radius: 16px;
@@ -141,4 +153,15 @@ h2 {
   box-shadow: 10px 5px 15px rgba(0, 0, 0, 0.27);
 
   border: 1px solid rgba(168, 168, 168, 0.848);
+}
+
+.actions {
+  display: flex;
+  gap: 36px;
+  margin-top: 14px;
+}
+
+.actions a {
+  text-decoration: none;
+  color: rgb(255, 255, 255);
 }

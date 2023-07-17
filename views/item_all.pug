@@ -7,7 +7,6 @@ block content
         each item in allItems 
             a(href=item.url)
                 .item 
-                    h3= item.name 
-                    div 
-                        p QTY: #{item.stock} 
-                        p= item.formattedPrice
+                    h3= item.name                  
+                    p QTY: #{item.stock} 
+                    p= item.formattedPrice
