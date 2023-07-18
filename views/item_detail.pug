@@ -3,21 +3,22 @@ extends layout
 block content 
     h1= title 
 
-    .detail-group 
-        h2= item.name 
-        p Category: #{item.category.name}
-        p= item.description 
-        p= item.formattedPrice 
-        p= item.stock
-
-    if item.imgpath 
-        img(src=item.imgpath, alt="product")
-
-    hr
-    div
-        a(href=`${item.url}/delete`) Delete Item 
-    div
-        a(href=`${item.url}/update`) Update Item
+    .detail-main
+        div
+            .detail-group 
+               h2= item.name 
+                p Category: #{item.category.name}
+                p= item.description 
+                p= item.formattedPrice 
+                p QTY: #{item.stock}
+            .actions
+                div
+                    a(href=`${item.url}/delete`) Delete Item 
+                div
+                    a(href=`${item.url}/update`) Update Item
+    
+        if item.imgpath 
+            img(src=item.imgpath, alt="product")
 
     if deleteItem 
         .delete-container-popup

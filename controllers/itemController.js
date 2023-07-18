@@ -161,6 +161,9 @@ exports.item_update_post = [
     // Extract errors
     const errors = validationResult(req);
 
+    let ImgPath = "";
+    // Define image path
+    if (req.file) ImgPath = path.join("/images", req.file.filename);
     // Create item object
     const item = new Item({
       name: req.body.name,
@@ -169,7 +172,7 @@ exports.item_update_post = [
       category: req.body.category,
       stock: req.body.stock,
       _id: req.params.id,
-      imgpath: path.join("/images", req.file.filename),
+      imgpath: ImgPath,
     });
 
     if (!errors.isEmpty()) {
