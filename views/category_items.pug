@@ -27,9 +27,9 @@ block content
                 form(method='POST' action='')
                     .form-group 
                         input#categoryid.form-control(type="hidden", name='categoryid' required='true' value=category._id)
+                .delete-button-group
                     button.btn-submit(type='submit') Delete Category
-                a(href=category.url)  
-                    button Cancel
+                    button#cancel-delete(onclick=`cancelDelete('${category.url}')`) Cancel
 
 
 

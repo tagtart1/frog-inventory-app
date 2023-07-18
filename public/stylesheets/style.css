@@ -88,14 +88,47 @@ p.category-desc {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.236);
+  background-color: rgba(0, 0, 0, 0.336);
 }
 
 .delete-popup {
-  background-color: white;
-  border: 1px solid black;
+  background-color: rgba(156, 148, 159, 0.474);
+  border: 1px solid rgba(173, 173, 173, 0.404);
   width: 300px;
-  height: 200px;
+
+  border-radius: 16px;
+  backdrop-filter: blur(6px);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+}
+
+.delete-popup p {
+  font-size: 18px;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.delete-popup .delete-button-group {
+  margin-top: 16px;
+  display: flex;
+  width: 100%;
+  gap: 12px;
+}
+
+.delete-popup .delete-button-group button {
+  flex: 1 1 50%;
+
+  border: none;
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  background-color: rgba(245, 245, 245, 0.474);
+  border-radius: 12px;
+  padding: 12px;
+  cursor: pointer;
 }
 
 .main-nav-list {
