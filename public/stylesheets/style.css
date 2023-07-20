@@ -136,7 +136,7 @@ p.category-desc {
   display: flex;
   list-style: none;
   text-decoration: none;
-  color: black;
+  color: rgb(255, 255, 255);
   gap: 52px;
   margin: 0;
   padding: 0;
